@@ -1,0 +1,24 @@
+env: "debug"
+
+server:
+  port: "8000"
+  timeout: 10s
+  iddle_timeout: 30s
+
+storage_path: "postgres://postgres:qwerty@localhost:5432/MoveDB"
+
+redis:
+  url: ""
+  password: ""
+  db: ""
+  timeout: ""
+
+jwt: ""
+
+features:
+  enable_swagger: true
+  enable_quests: true
+  enable_cache: true
+  enable_metrics: false
+
+quests:

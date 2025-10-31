@@ -1,22 +1,28 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Env         string       `mapstructure:"env"`
-	Server      ServerConfig `mapstructure:"server"`
-	StoragePath string       `mapstructure:"storage_path"`
-	Redis       RedisConfig  `mapstructure:"redis"`
-	Jwt         string       `mapstructure:"jwt"`
-	Features    RedisConfig  `mapstructure:"features"`
-	Quests      QuestsConfig `mapstructure:"quests"`
+	Env      string        `mapstructure:"env"`
+	Server   ServerConfig  `mapstructure:"server"`
+	Storage  StorageConfig `mapstructure:"storage"`
+	Redis    RedisConfig   `mapstructure:"redis"`
+	Jwt      string        `mapstructure:"jwt"`
+	Features RedisConfig   `mapstructure:"features"`
+	Quests   QuestsConfig  `mapstructure:"quests"`
 }
 
+type StorageConfig struct {
+	Path            string        `mapstructure:"path"`
+	MaxOpenConns    int           `mapstructure:"max_open_conns"`
+	MaxIdleConns    int           `mapstructure:"max_idle_conns"`
+	ConnMaxLifetime time.Duration `mapstructure:"conn_max_lifetime"`
+}
 type ServerConfig struct {
 	Port         int           `mapstructure:"port"`
 	Timeout      time.Duration `mapstructure:"timeout"`
@@ -36,7 +42,8 @@ type FeaturesConfig struct {
 type QuestsConfig struct {
 }
 
-func Load() *Config {
+func Load() (*Config, error) {
+	const op = "config.Load"
 
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
@@ -47,15 +54,15 @@ func Load() *Config {
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Warning: Config file not found, %v", err)
+		return nil, fmt.Errorf("Failed to read config file:%s,  %w", op, err)
 	}
 
 	var cfg Config
 	if err := viper.Unmarshal(&cfg); err != nil {
-		log.Fatalf("Failed to unmarshal config: %v", err)
+		return nil, fmt.Errorf("Failed to unmarshal config:%s,  %w", op, err)
 	}
 
-	return &cfg
+	return &cfg, nil
 }
 
 func setDefault() {

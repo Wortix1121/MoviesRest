@@ -1,0 +1,4 @@
+users (id, email, password_hash, name, role, created_at, updated_at)
+genres (id, name)
+movies (id, title, description, duration_minutes, release_date, poster_url, age_rating, type, created_at)
+movie_genres (movie_id, genre_id) – составной первичный ключ, внешние ключи на movies.id и genres.id с каскадным удалением

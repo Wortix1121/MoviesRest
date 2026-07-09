@@ -16,9 +16,9 @@ type Storage struct {
 
 // Новое подключение
 func New(ctx context.Context, cfg *config.StorageConfig) (*Storage, error) {
-	const op = "Storage.New"
+	const op = "Storage.postgre.New"
 
-	conStr := fmt.Sprintf("%s", cfg.Path)
+	conStr := fmt.Sprintf("%s", cfg.PathNotSSL)
 	db, err := sqlx.Open("postgres", conStr)
 	if err != nil {
 		return nil, fmt.Errorf("Failed Connected to open connection: %s, %w", op, err)
@@ -45,7 +45,7 @@ func (s *Storage) GetDB() *sqlx.DB {
 }
 
 // Проверка доступности DB
-func (s *Storage) HealthCheck(ctx context.Context) error {
+func (s *Storage) HealthCheckDB(ctx context.Context) error {
 	const op = "Storage.HealthCheck"
 
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -59,7 +59,7 @@ func (s *Storage) HealthCheck(ctx context.Context) error {
 }
 
 // Закрываем подключение DB
-func (s *Storage) Close() error {
+func (s *Storage) CloseDB() error {
 	const op = "Storage.Close"
 
 	if err := s.db.Close(); err != nil {

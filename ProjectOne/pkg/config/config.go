@@ -18,7 +18,8 @@ type Config struct {
 }
 
 type StorageConfig struct {
-	Path            string        `mapstructure:"path"`
+	PathSSL         string        `mapstructure:"path_ssl"`
+	PathNotSSL      string        `mapstructure:"path_not_sll"`
 	MaxOpenConns    int           `mapstructure:"max_open_conns"`
 	MaxIdleConns    int           `mapstructure:"max_idle_conns"`
 	ConnMaxLifetime time.Duration `mapstructure:"conn_max_lifetime"`

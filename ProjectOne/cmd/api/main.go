@@ -2,6 +2,7 @@ package main
 
 import (
 	"appMove/internal/storage/postgre"
+	"appMove/migrator"
 	"appMove/pkg/config"
 	"context"
 	"fmt"
@@ -18,21 +19,28 @@ func main() {
 	fmt.Println(cfg)
 
 	// Init database (postgre)
-
 	ctx := context.Background()
 
 	store, err := postgre.New(ctx, &cfg.Storage)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
-	defer store.Close()
+	defer store.CloseDB()
 
-	// Проверка здоровья БД
-	if err := store.HealthCheck(ctx); err != nil {
+	// Проверка работоспособности БД
+	if err := store.HealthCheckDB(ctx); err != nil {
 		log.Fatal("Database health check failed:", err)
 	}
 
 	fmt.Println("✅ Successfully connected to database!")
+
+	// Migrator
+	mRuning, err := migrator.RunMigrations(&cfg.Storage)
+	if err != nil {
+		log.Fatal("Failed to migrate ", err)
+	}
+
+	_ = mRuning
 
 	//init http - (gin)
 

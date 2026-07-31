@@ -1,4 +1,4 @@
-package postgre
+package database
 
 import (
 	"appMove/pkg/config"

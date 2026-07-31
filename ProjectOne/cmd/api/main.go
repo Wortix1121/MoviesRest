@@ -1,9 +1,9 @@
 package main
 
 import (
-	"appMove/internal/storage/postgre"
 	"appMove/migrator"
 	"appMove/pkg/config"
+	"appMove/pkg/database"
 	"context"
 	"fmt"
 	"log"
@@ -21,7 +21,7 @@ func main() {
 	// Init database (postgre)
 	ctx := context.Background()
 
-	store, err := postgre.New(ctx, &cfg.Storage)
+	store, err := database.New(ctx, &cfg.Storage)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}

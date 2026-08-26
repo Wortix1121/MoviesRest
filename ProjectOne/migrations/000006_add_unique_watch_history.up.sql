@@ -1,0 +1,1 @@
+ALTER TABLE user_watch_history ADD CONSTRAINT unique_user_content UNIQUE (user_id, content_type, content_id)

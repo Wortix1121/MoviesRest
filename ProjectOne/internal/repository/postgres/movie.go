@@ -21,7 +21,7 @@ func NewMovieRepository(db *sqlx.DB) repository.MovieRepository {
 }
 
 func (r *movieRepository) Create(ctx context.Context, movie *model.Movie) (int64, error) {
-	const op = "Repository.Postgres.Create"
+	const op = "Repository.Postgres.movieCreate"
 
 	query := `
 	INSERT INTO movies (title, description, duration_minutes, release_date, poster_url, age_rating, type, created_at) 
@@ -44,13 +44,13 @@ func (r *movieRepository) Create(ctx context.Context, movie *model.Movie) (int64
 	).Scan(&id)
 
 	if err != nil {
-		return 0, fmt.Errorf("%s: failed to create user: %w", op, err)
+		return 0, fmt.Errorf("%s: failed to create movie: %w", op, err)
 	}
 	return id, nil
 }
 
 func (r *movieRepository) GetByID(ctx context.Context, id int64) (*model.Movie, error) {
-	const op = "Repository.Postgres.GetByID"
+	const op = "Repository.Postgres.movieGetByID"
 
 	query := `
 		SELECT id, title, description, duration_minutes, release_date, poster_url, age_rating, type, created_at 
@@ -73,7 +73,7 @@ func (r *movieRepository) GetByID(ctx context.Context, id int64) (*model.Movie, 
 }
 
 func (r *movieRepository) Update(ctx context.Context, movie *model.Movie) error {
-	const op = "Repository.Postgres.Update"
+	const op = "Repository.Postgres.movieUpdate"
 
 	query := `
 		UPDATE movies
@@ -102,14 +102,14 @@ func (r *movieRepository) Update(ctx context.Context, movie *model.Movie) error 
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("%s: user with id %d not found", op, movie.ID)
+		return fmt.Errorf("%s: movie with id %d not found", op, movie.ID)
 	}
 
 	return nil
 }
 
 func (r *movieRepository) Delete(ctx context.Context, id int64) error {
-	const op = "Repository.Postgres.Delete"
+	const op = "Repository.Postgres.movieDelete"
 
 	query := `
 		DELETE FROM movies
@@ -127,7 +127,7 @@ func (r *movieRepository) Delete(ctx context.Context, id int64) error {
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("%s: user with id %d not found", op, id)
+		return fmt.Errorf("%s: movie with id %d not found", op, id)
 	}
 
 	return nil

@@ -22,7 +22,7 @@ func NewGenreRepository(db *sqlx.DB) repository.GenreRepository {
 }
 
 func (r *genreRepository) Create(ctx context.Context, genre *model.Genre) (int64, error) {
-	const op = "Repository.Postgres.Create"
+	const op = "Repository.Postgres.genreCreate"
 
 	query := `
 	INSERT INTO genres (name) 
@@ -38,13 +38,13 @@ func (r *genreRepository) Create(ctx context.Context, genre *model.Genre) (int64
 	).Scan(&id)
 
 	if err != nil {
-		return 0, fmt.Errorf("%s: failed to create user: %w", op, err)
+		return 0, fmt.Errorf("%s: failed to create genre: %w", op, err)
 	}
 	return id, nil
 }
 
 func (r *genreRepository) GetByID(ctx context.Context, id int64) (*model.Genre, error) {
-	const op = "Repository.Postgres.GetByID"
+	const op = "Repository.Postgres.genreGetByID"
 
 	query := `
 		SELECT name
@@ -67,7 +67,7 @@ func (r *genreRepository) GetByID(ctx context.Context, id int64) (*model.Genre, 
 }
 
 func (r *genreRepository) Update(ctx context.Context, genre *model.Genre) error {
-	const op = "Repository.Postgres.Update"
+	const op = "Repository.Postgres.genreUpdate"
 
 	query := `
 		UPDATE genres
@@ -79,6 +79,7 @@ func (r *genreRepository) Update(ctx context.Context, genre *model.Genre) error 
 		ctx,
 		query,
 		genre.Name,
+		genre.ID,
 	)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
@@ -90,14 +91,14 @@ func (r *genreRepository) Update(ctx context.Context, genre *model.Genre) error 
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("%s: user with id %d not found", op, genre.ID)
+		return fmt.Errorf("%s: genre with id %d not found", op, genre.ID)
 	}
 
 	return nil
 }
 
 func (r *genreRepository) Delete(ctx context.Context, id int64) error {
-	const op = "Repository.Postgres.Delete"
+	const op = "Repository.Postgres.genreDelete"
 
 	query := `
 		DELETE FROM genres
@@ -115,7 +116,7 @@ func (r *genreRepository) Delete(ctx context.Context, id int64) error {
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("%s: user with id %d not found", op, id)
+		return fmt.Errorf("%s: genre with id %d not found", op, id)
 	}
 
 	return nil

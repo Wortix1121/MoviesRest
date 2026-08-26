@@ -21,7 +21,7 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 }
 
 func (r *userRepository) Create(ctx context.Context, user *model.User) (int64, error) {
-	const op = "Repository.Postgres.Create"
+	const op = "Repository.Postgres.userCreate"
 
 	query := `
 	INSERT INTO users (email, password_hash, name, role, created_at, updated_at) 
@@ -48,7 +48,7 @@ func (r *userRepository) Create(ctx context.Context, user *model.User) (int64, e
 }
 
 func (r *userRepository) GetByID(ctx context.Context, id int64) (*model.User, error) {
-	const op = "Repository.Postgres.GetByID"
+	const op = "Repository.Postgres.userGetByID"
 
 	query := `
 		SELECT id, email, password_hash, name, role, created_at, updated_at 
@@ -71,7 +71,7 @@ func (r *userRepository) GetByID(ctx context.Context, id int64) (*model.User, er
 }
 
 func (r *userRepository) GetByEmail(ctx context.Context, email string) (*model.User, error) {
-	const op = "Repository.Postgres.GetByEmail"
+	const op = "Repository.Postgres.userGetByEmail"
 
 	query := `
 		SELECT id, email, password_hash, name, role, created_at, updated_at
@@ -94,7 +94,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (*model.U
 }
 
 func (r *userRepository) Update(ctx context.Context, user *model.User) error {
-	const op = "Repository.Postgres.Update"
+	const op = "Repository.Postgres.userUpdate"
 
 	query := `
 		UPDATE users
@@ -127,7 +127,7 @@ func (r *userRepository) Update(ctx context.Context, user *model.User) error {
 }
 
 func (r *userRepository) Delete(ctx context.Context, id int64) error {
-	const op = "Repository.Postgres.Delete"
+	const op = "Repository.Postgres.userDelete"
 
 	query := `
 		DELETE FROM users

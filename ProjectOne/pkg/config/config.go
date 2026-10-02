@@ -8,13 +8,13 @@ import (
 )
 
 type Config struct {
-	Env      string        `mapstructure:"env"`
-	Server   ServerConfig  `mapstructure:"server"`
-	Storage  StorageConfig `mapstructure:"storage"`
-	Redis    RedisConfig   `mapstructure:"redis"`
-	Jwt      string        `mapstructure:"jwt"`
-	Features RedisConfig   `mapstructure:"features"`
-	Quests   QuestsConfig  `mapstructure:"quests"`
+	Env      string         `mapstructure:"env"`
+	Server   ServerConfig   `mapstructure:"server"`
+	Storage  StorageConfig  `mapstructure:"storage"`
+	Redis    RedisConfig    `mapstructure:"redis"`
+	Jwt      JWTConfig      `mapstructure:"jwt"`
+	Features FeaturesConfig `mapstructure:"features"`
+	Quests   QuestsConfig   `mapstructure:"quests"`
 }
 
 type StorageConfig struct {
@@ -24,10 +24,11 @@ type StorageConfig struct {
 	MaxIdleConns    int           `mapstructure:"max_idle_conns"`
 	ConnMaxLifetime time.Duration `mapstructure:"conn_max_lifetime"`
 }
+
 type ServerConfig struct {
-	Port         int           `mapstructure:"port"`
-	Timeout      time.Duration `mapstructure:"timeout"`
-	IddleTimeout time.Duration `mapstructure:"iddle_timeout"`
+	Port        int           `mapstructure:"port"`
+	Timeout     time.Duration `mapstructure:"timeout"`
+	IdleTimeout time.Duration `mapstructure:"idle_timeout"`
 }
 
 type RedisConfig struct {
@@ -38,6 +39,11 @@ type FeaturesConfig struct {
 	EnableQuests  bool `mapstructure:"enable_quests"`
 	EnableCache   bool `mapstructure:"enable_cache"`
 	EnableMetrics bool `mapstructure:"enable_metrics"`
+}
+
+type JWTConfig struct {
+	Secret string        `mapstructure:"secret"`
+	TTL    time.Duration `mapstructure:"ttl"`
 }
 
 type QuestsConfig struct {
@@ -68,9 +74,9 @@ func Load() (*Config, error) {
 
 func setDefault() {
 	// Server defaults
-	viper.SetDefault("server.port", "8000")
-	viper.SetDefault("server.read_timeout", 10*time.Second)
-	viper.SetDefault("server.write_timeout", 30*time.Second)
+	viper.SetDefault("server.port", 8000)
+	viper.SetDefault("server.timeout", 10*time.Second)
+	viper.SetDefault("server.idle_timeout", 30*time.Second)
 
 	// Redis defaults
 	// viper.SetDefault("redis.url", "redis://localhost:6379")
@@ -79,8 +85,8 @@ func setDefault() {
 	// viper.SetDefault("redis.timeout", 3*time.Second)
 
 	// JWT defaults
-	// viper.SetDefault("jwt.secret", "your-super-secret-jwt-key-change-in-production")
-	// viper.SetDefault("jwt.expires_in", 24*time.Hour)
+	viper.SetDefault("jwt.secret", "super-secret-jwt-key")
+	viper.SetDefault("jwt.ttl", 24*time.Hour)
 
 	// Features defaults
 	viper.SetDefault("features.enable_swagger", true)
